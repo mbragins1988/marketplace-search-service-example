@@ -8,7 +8,7 @@ cd /app
 echo "Applying database migrations..."
 uv run alembic upgrade head
 
-# Запускаем consumer в фоне.
+# Запускаем consumer в фоне
 uv run python -m bin.consumer &
 
 # Запускаем API (без exec, чтобы shell ждал)
