@@ -7,12 +7,15 @@ from src.infrastructure.persistence.database import (
     create_engine,
     create_session_factory,
 )
+from src.middleware import TraceMiddleware
 from src.presentation.api.dependencies import setup
 from src.presentation.api.routes.public import router as public_router
 from src.settings import Settings
+from src.tracing import setup_logging
 
 
 def create_app() -> FastAPI:
+    setup_logging()
     settings = Settings()
 
     engine = create_engine(settings)
@@ -24,5 +27,6 @@ def create_app() -> FastAPI:
         yield
 
     app = FastAPI(title="Search Service", lifespan=lifespan)
+    app.add_middleware(TraceMiddleware)
     app.include_router(public_router)
     return app

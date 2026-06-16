@@ -15,13 +15,11 @@ from src.infrastructure.persistence.database import (
 )
 from src.infrastructure.persistence.uow import SQLAlchemyUnitOfWork
 from src.settings import Settings
+from src.tracing import setup_logging
 
 
 async def main() -> None:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    )
+    setup_logging()
     logger = logging.getLogger("consumer")
 
     settings = Settings()

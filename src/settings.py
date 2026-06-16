@@ -4,7 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
     kafka_bootstrap_servers: str = os.getenv("KAFKA_BROKERS", "localhost:9092")
     kafka_topic_ads: str = os.getenv(
         "KAFKA_TOPIC_ADS", "student_mbragins1988-marketplace.ads"
@@ -29,4 +31,4 @@ class Settings(BaseSettings):
             return pg_conn
 
         # Fallback для локальной разработки.
-        return "postgresql+asyncpg://postgres:postgres@localhost:5433/auth_db"
+        return "postgresql+asyncpg://postgres:postgres@localhost:5435/search_db"

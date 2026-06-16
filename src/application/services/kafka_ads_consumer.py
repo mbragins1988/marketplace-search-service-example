@@ -4,6 +4,7 @@ import typing
 from aiokafka import AIOKafkaConsumer
 
 from src.application.ports.usecases import IndexAdPort, RemoveAdPort
+from src.tracing import new_trace_id, set_trace_id
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,12 @@ class KafkaAdsConsumer:
         logger = logging.getLogger(__name__)
         logger.info("Consumer run loop started")
         async for msg in self._consumer:
+            trace_id = ""
+            for key, value in msg.headers or []:
+                if key == "X-Trace-Id":
+                    trace_id = value.decode()
+                    break
+            set_trace_id(trace_id or new_trace_id())
             logger.info(f"Received message: {msg.value}")
             try:
                 event_type = msg.value.get("event")
